@@ -14,6 +14,11 @@ public class RestApplication {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SpringApplicationContext springApplicationContext(){
+        return new SpringApplicationContext();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(RestApplication.class, args);
     }

@@ -1,7 +1,10 @@
 package home.udemy.rest.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import home.udemy.rest.SpringApplicationContext;
+import home.udemy.rest.dto.UserDto;
 import home.udemy.rest.request.UserLoginRequestModel;
+import home.udemy.rest.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +32,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
+            //todo No content to map due to end-of-input
             UserLoginRequestModel creds = new ObjectMapper()
                     .readValue(request.getInputStream(), UserLoginRequestModel.class);
 
@@ -53,6 +57,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
 
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
+
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        response.addHeader("UserId", userDto.getUserId());
+
     }
 }
