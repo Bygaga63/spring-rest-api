@@ -2,8 +2,8 @@ package home.udemy.rest.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import home.udemy.rest.SpringApplicationContext;
-import home.udemy.rest.dto.UserDto;
-import home.udemy.rest.request.UserLoginRequestModel;
+import home.udemy.rest.shared.dto.UserDto;
+import home.udemy.rest.ui.model.request.UserLoginRequestModel;
 import home.udemy.rest.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -30,11 +30,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest req,
+                                                HttpServletResponse res) throws AuthenticationException {
         try {
-            //todo No content to map due to end-of-input
             UserLoginRequestModel creds = new ObjectMapper()
-                    .readValue(request.getInputStream(), UserLoginRequestModel.class);
+                    .readValue(req.getInputStream(), UserLoginRequestModel.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -42,26 +42,29 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             creds.getPassword(),
                             new ArrayList<>())
             );
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String userName = ((User) authResult.getPrincipal()).getUsername();
+    protected void successfulAuthentication(HttpServletRequest req,
+                                            HttpServletResponse res,
+                                            FilterChain chain,
+                                            Authentication auth) throws IOException, ServletException {
 
+        String userName = ((User) auth.getPrincipal()).getUsername();
         String token = Jwts.builder()
                 .setSubject(userName)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET )
                 .compact();
-
-        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
         UserDto userDto = userService.getUser(userName);
 
-        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        response.addHeader("UserId", userDto.getUserId());
-
+        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        res.addHeader("UserID", userDto.getUserId());
     }
+
 }

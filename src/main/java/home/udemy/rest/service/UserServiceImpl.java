@@ -1,9 +1,10 @@
 package home.udemy.rest.service;
 
-import home.udemy.rest.dto.UserDto;
-import home.udemy.rest.entity.UserEntity;
-import home.udemy.rest.repository.UserRepository;
+import home.udemy.rest.shared.dto.UserDto;
+import home.udemy.rest.io.entity.UserEntity;
+import home.udemy.rest.io.repository.UserRepository;
 import home.udemy.rest.shared.Utils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -13,18 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private Utils utils;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final  Utils utils;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

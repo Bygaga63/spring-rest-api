@@ -1,10 +1,9 @@
-package home.udemy.rest.controller;
+package home.udemy.rest.ui.controller;
 
-import home.udemy.rest.dto.UserDto;
-import home.udemy.rest.request.UserDetailsRequestModel;
-import home.udemy.rest.response.UserRest;
+import home.udemy.rest.shared.dto.UserDto;
+import home.udemy.rest.ui.model.request.UserDetailsRequestModel;
+import home.udemy.rest.ui.model.response.UserRest;
 import home.udemy.rest.service.UserService;
-import home.udemy.rest.shared.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class UserController {
         return new UserRest();
     }
     @PostMapping
-    public UserRest saveUser(UserDetailsRequestModel userDetails){
+    public UserRest saveUser(@RequestBody UserDetailsRequestModel userDetails){
         UserRest returnValue = new UserRest();
 
         UserDto userDto = new UserDto();

@@ -1,6 +1,6 @@
 package home.udemy.rest.service;
 
-import home.udemy.rest.dto.UserDto;
+import home.udemy.rest.shared.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
