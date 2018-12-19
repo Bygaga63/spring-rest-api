@@ -6,7 +6,10 @@ import home.udemy.rest.ui.model.response.UserRest;
 import home.udemy.rest.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
 
 @RestController
 @RequestMapping("users")
@@ -15,7 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest getUser(@PathVariable String id){
         UserRest returnValue = new UserRest();
 
@@ -25,7 +28,9 @@ public class UserController {
         return returnValue;
 
     }
-    @PostMapping
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest saveUser(@RequestBody UserDetailsRequestModel userDetails){
         UserRest returnValue = new UserRest();
 
