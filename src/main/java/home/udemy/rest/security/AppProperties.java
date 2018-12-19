@@ -1,0 +1,15 @@
+package home.udemy.rest.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AppProperties {
+    //Вытаскивает значение из application.property файла
+    @Autowired
+    private Environment env;
+    public String getTokenSecret(){
+        return env.getProperty("tokenSecret");
+    }
+}

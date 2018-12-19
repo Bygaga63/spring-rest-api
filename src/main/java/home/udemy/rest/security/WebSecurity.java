@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +30,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //если не отключить, post запросы могут не доходить
                 .csrf().disable()
                 .authorizeRequests()
+                //разрешаем только регистрацию
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
                 .anyRequest().authenticated()
-        .and().addFilter(getAthenticationFilter());
+                .and()
+                //фильтр в который мы отправляем логин, пароль. UsernamePasswordAuthenticationFilter
+                .addFilter(getAthenticationFilter())
+                //фильтр который ловит все все запросы BasicAuthenticationFilter
+                .addFilter(new AuthorizationFilter(authenticationManager()))
+                // если не отключить сессию, после логирования и авторизации пользователь закешится и может проходить без токена
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     public AuthenticationFilter getAthenticationFilter() throws Exception {
