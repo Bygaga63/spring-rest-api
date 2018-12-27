@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @Component
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userDetailsService;
