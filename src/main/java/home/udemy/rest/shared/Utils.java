@@ -1,12 +1,31 @@
 package home.udemy.rest.shared;
-
+import java.security.SecureRandom;
 import org.springframework.stereotype.Component;
-
+import java.util.Random;
 import java.util.UUID;
 
 @Component
 public class Utils {
-    public String generatedUserId(){
-        return UUID.randomUUID().toString();
+
+    private final Random RANDOM = new SecureRandom();
+    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    public String generateUserId(int length) {
+        return generateRandomString(length);
+    }
+
+    public String generateAddressId(int length) {
+        return generateRandomString(length);
+    }
+
+
+    private String generateRandomString(int length) {
+        StringBuilder returnValue = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        }
+
+        return new String(returnValue);
     }
 }

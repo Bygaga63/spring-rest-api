@@ -2,8 +2,12 @@ package home.udemy.rest.shared.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.List;
+
 @Data
-public class UserDto {
+public class UserDto implements Serializable {
+    private static final long serialVersionUID = 6835192601898364280L;
     private long id;
     private String userId;
     private String firstName;
@@ -12,5 +16,6 @@ public class UserDto {
     private String password;
     private String encryptedPassword;
     private String emailVerificationToken;
-    private String emailVerificationStatus;
+    private Boolean emailVerificationStatus = false;
+    private List<AddressDto> addresses;
 }

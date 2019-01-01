@@ -1,38 +1,44 @@
 package home.udemy.rest.io.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "users")
-@Data
+@Getter
+@Setter
 public class UserEntity implements Serializable {
+
+    private static final long serialVersionUID = 5313493413859894403L;
 
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
-    @Column(nullable = false)
+    @Column(nullable=false)
     private String userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable=false, length=50)
     private String firstName;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable=false, length=50)
     private String lastName;
 
-    @Column(nullable = false, length = 120, unique = true)
+    @Column(nullable=false, length=120)
     private String email;
-    @Column(nullable = false)
-    private String password;
+
+    @Column(nullable=false)
     private String encryptedPassword;
 
     private String emailVerificationToken;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(nullable=false)
     private Boolean emailVerificationStatus = false;
+
+    @OneToMany(mappedBy="userDetails", cascade=CascadeType.ALL)
+    private List<AddressEntity> addresses;
 }
